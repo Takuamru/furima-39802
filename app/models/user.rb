@@ -4,10 +4,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   # ニックネーム、メールアドレス、パスワードの必須チェック
-  validates :nickname, :email, :password, presence: true
+  validates :nickname, :password, presence: true
         
   # メールアドレスの一意性と@の含有
-  validates :email, uniqueness: true, format: { with: /\A[^@\s]+@[^@\s]+\z/ }
+  validates :uniqueness: true, format: { with: /\A[^@\s]+@[^@\s]+\z/ }
         
   # パスワードの長さとフォーマット（6文字以上、半角英数字混合）
   validates :password, length: { minimum: 6 }, format: { with: /\A(?=.*?[a-zA-Z])(?=.*?\d)[a-zA-Z\d]+\z/ }
