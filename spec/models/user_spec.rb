@@ -37,6 +37,13 @@ RSpec.describe User, type: :model do
         expect(@user.errors.full_messages).to include "Email is invalid"
       end
       
+      it 'パスワードが空では登録できない' do
+        @user.password = ''
+        @user.password_confirmation = ''
+        @user.valid?
+        expect(@user.errors.full_messages).to include("Password can't be blank")
+      end
+      
       it 'パスワードは6文字以上である必要がある' do
         @user.password = 'a1'
         @user.password_confirmation = 'a1'
