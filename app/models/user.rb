@@ -3,8 +3,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
-  # ニックネーム、メールアドレス、パスワードの必須チェック
-  validates :nickname, :password, presence: true
+  # ニックネームの必須チェック
+  validates :nickname, presence: true
 
   # パスワードの長さとフォーマット（6文字以上、半角英数字混合）
   validates :password, format: { with: /\A(?=.*?[a-zA-Z])(?=.*?\d)[a-zA-Z\d]+\z/ }
