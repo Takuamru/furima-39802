@@ -2,7 +2,6 @@ class Item < ApplicationRecord
   extend ActiveHash::Associations::ActiveRecordExtensions
   belongs_to :user
   has_one_attached :image
-  belongs_to :category
   #has_one :purchase
 
   with_options presence: true do

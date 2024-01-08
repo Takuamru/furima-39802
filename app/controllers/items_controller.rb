@@ -11,6 +11,7 @@ class ItemsController < ApplicationController
 
   def create
     @item = Item.new(item_params)
+    @item.user = current_user  # 現在のユーザーを@itemに割り当てる
     if @item.save
       redirect_to root_path
     else
