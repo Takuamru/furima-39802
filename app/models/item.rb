@@ -5,7 +5,6 @@ class Item < ApplicationRecord
   #has_one :purchase
 
   with_options presence: true do
-    validates :user
     validates :image  
     validates :name
     validates :description
