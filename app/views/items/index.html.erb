@@ -155,7 +155,26 @@
         </li>
       <% end %>
     <% else %>
-      <!-- ここにダミー商品表示のHTMLを追加 -->
+      <li class='list'>
+        <div class='item-img-content'>
+          <%= image_tag "item-sample.png", class: "item-img" %>
+          <div class='sold-out'>
+            <span>Sold Out!!</span>
+          </div>
+        </div>
+        <div class='item-info'>
+          <h3 class='item-name'>
+            サンプル商品
+          </h3>
+          <div class='item-price'>
+            <span>0円<br>送料込み</span>
+            <div class='star-btn'>
+              <%= image_tag "star.png", class:"star-icon" %>
+              <span class='star-count'>0</span>
+            </div>
+          </div>
+        </div>
+      </li>
     <% end %>
   </ul>
 </div>
