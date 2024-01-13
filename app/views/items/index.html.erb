@@ -121,46 +121,45 @@
   <%# /FURIMAの特徴 %>
 
  <%# 商品一覧 %>
-  <div class='item-contents'>
-    <h2 class='title'>ピックアップカテゴリー</h2>
-    <div class="subtitle">
-      新規投稿商品
-    </div>
-    <ul class='item-lists'>
-      <% if @items.present? %>
-        <% @items.each do |item| %>
-          <li class='list'>
-            <%= link_to item_path(item) do %>
-              <div class='item-img-content'>
-                <%= image_tag item.image, class: "item-img" if item.image.attached? %>
-                <%# 商品が売れていればsold outを表示 %>
-                <% if item.sold? %>
-                  <div class='sold-out'>
-                    <span>Sold Out!!</span>
-                  </div>
-                <% end %>
-              </div>
-              <div class='item-info'>
-                <h3 class='item-name'>
-                  <%= item.name %>
-                </h3>
-                <div class='item-price'>
-                  <span><%= item.price %>円<br><%= item.shipping_fee.name %></span>
-                  <div class='star-btn'>
-                    <%= image_tag "star.png", class:"star-icon" %>
-                    <span class='star-count'>0</span>
-                  </div>
+<div class='item-contents'>
+  <h2 class='title'>ピックアップカテゴリー</h2>
+  <div class="subtitle">
+    新規投稿商品
+  </div>
+  <ul class='item-lists'>
+    <% if @items.present? %>
+      <% @items.order(created_at: :desc).each do |item| %>
+        <li class='list'>
+          <%= link_to item_path(item) do %>
+            <div class='item-img-content'>
+              <%= image_tag item.image, class: "item-img" if item.image.attached? %>
+              <%# if item.sold? %>
+                <%# <div class='sold-out'>
+                  <span>Sold Out!!</span>
+                </div>
+              <% end %>
+            </div>
+            <div class='item-info'>
+              <h3 class='item-name'>
+                <%= item.name %>
+              </h3>
+              <div class='item-price'>
+                <span><%= item.price %>円<br><%= item.shipping_fee.name %></span>
+                <div class='star-btn'>
+                  <%= image_tag "star.png", class:"star-icon" %>
+                  <span class='star-count'>0</span>
                 </div>
               </div>
-            <% end %>
-          </li>
-        <% end %>
-      <% else %>
-        <!-- ダミー商品の表示 -->
+            </div>
+          <% end %>
+        </li>
       <% end %>
-    </ul>
-  </div>
-  <%# /商品一覧 %>
+    <% else %>
+      <!-- ここにダミー商品表示のHTMLを追加 -->
+    <% end %>
+  </ul>
+</div>
+<%# /商品一覧 %>
 </div>
 
 <%= link_to new_item_path, class: 'purchase-btn' do %>
