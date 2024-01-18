@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
-  root "items#index"  # ルートパスをitemsコントローラーのindexアクションに設定
+  root "items#index"
 
-  resources :items, only: [:index, :new, :create, :show] do
+  resources :items, only: [:index, :new, :create, :show, :edit, :update] do
     # 必要に応じて、さらにネストされたルートやカスタムルートをここに追加
   end
 end
