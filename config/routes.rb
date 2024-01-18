@@ -3,6 +3,6 @@ Rails.application.routes.draw do
   root "items#index"
 
   resources :items do
-    # 必要に応じて、さらにネストされたルートやカスタムルートをここに追加
+    resource :purchases, only: [:new, :create]
   end
 end
