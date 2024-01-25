@@ -1,5 +1,5 @@
 const pay = () => {
-  const publicKey = gon.public_key;
+  const publicKey = 'pk_test_c207b00da96ac02ebb676754';
   const payjp = Payjp(publicKey);
   const elements = payjp.elements();
   const numberElement = elements.create('cardNumber');
@@ -10,24 +10,32 @@ const pay = () => {
   expiryElement.mount('#expiry-form');
   cvcElement.mount('#cvc-form');
 
-  const form = document.getElementById('charge-form')
+  const form = document.getElementById('charge-form');
   form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // トークンを生成し、フォームに追加
     payjp.createToken(numberElement).then(function (response) {
       if (response.error) {
+        // エラーハンドリング
+        console.log(response.error.message);
       } else {
+        // トークンを取得し、フォームに追加
         const token = response.id;
-        console.log(token)
-        const renderDom = document.getElementById("charge-form");
-        const tokenObj = `<input value=${token} name='token' type="hidden">`;
-        renderDom.insertAdjacentHTML("beforeend", tokenObj);
+        const tokenObj = `<input value="${token}" name='purchase_form[token]' type="hidden">`;
+        form.insertAdjacentHTML("beforeend", tokenObj);
+
+        // クレジットカードの情報をクリア
+        numberElement.clear();
+        expiryElement.clear();
+        cvcElement.clear();
+
+        // フォームを送信
+        form.submit();
       }
-      numberElement.clear();
-      expiryElement.clear();
-      cvcElement.clear();
-      document.getElementById("charge-form").submit();
     });
-    e.preventDefault();
   });
 };
 
 window.addEventListener("turbo:load", pay);
+

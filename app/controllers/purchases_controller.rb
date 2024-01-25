@@ -4,35 +4,42 @@ class PurchasesController < ApplicationController
   before_action :redirect_if_purchased_or_owner, only: [:new, :create]
 
   def new
-    gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
-    @purchase = Purchase.new
+    gon.public_key = 'pk_test_c207b00da96ac02ebb676754'
+    @purchase_form = PurchaseForm.new
   end
 
   def create
-    Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
-    # トランザクションを開始
-    ActiveRecord::Base.transaction do
-      # PAY.JPに決済を依頼
-      charge = Payjp::Charge.create(
-        amount: @item.price,
-        card: purchase_params[:token],
-        currency: 'jpy'
-      )
+    @purchase_form = PurchaseForm.new(purchase_form_params)
+    Payjp.api_key = 'sk_test_5b28905565479baa2081b240'
 
-      # Purchaseオブジェクトを保存
-      @purchase = Purchase.new(user_id: current_user.id, item_id: params[:item_id])
-      @purchase.save!
+    if @purchase_form.valid?
+      begin
+        ActiveRecord::Base.transaction do
+          charge = Payjp::Charge.create(
+            amount: @item.price,
+            card: @purchase_form.token,
+            currency: 'jpy'
+          )
 
-      # ShippingAddressオブジェクトを保存
-      shipping_address_params = purchase_params.except(:user_id, :item_id)
-      @shipping_address = ShippingAddress.new(shipping_address_params)
-      @shipping_address.purchase = @purchase
-      @shipping_address.save!
+          @purchase_form.save
+        end
+
+        redirect_to root_path
+      rescue Payjp::PayjpError => e
+        flash.now[:alert] = '支払い処理に失敗しました。'
+        render :new
+      rescue ActiveRecord::RecordInvalid => e
+        # トランザクション内での例外処理
+        Rails.logger.error e.message
+        @errors = e.record.errors.full_messages
+        flash.now[:alert] = '保存に失敗しました'
+        render :new
+      end
+    else
+      @errors = @purchase_form.errors.full_messages
+      flash.now[:alert] = '保存に失敗しました'
+      render :new
     end
-
-    redirect_to root_path
-    rescue ActiveRecord::RecordInvalid
-    render :new
   end
 
   private
@@ -41,12 +48,11 @@ class PurchasesController < ApplicationController
     @item = Item.find(params[:item_id])
   end
 
-  def purchase_params
-    params.require(:purchase).permit(:postal_code, :shipping_area_id, :city, :address, :building_name, :phone_number,).merge(user_id: current_user.id, token: params[:token])
+  def purchase_form_params
+    params.require(:purchase_form).permit(:postal_code, :shipping_area_id, :city, :address, :building_name, :phone_number, :token).merge(user_id: current_user.id, item_id: @item.id)
   end
 
   def redirect_if_purchased_or_owner
     redirect_to root_path if @item.purchase.present? || current_user.id == @item.user_id
-  end
+  end  
 end
-
