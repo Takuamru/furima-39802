@@ -4,13 +4,13 @@ class PurchasesController < ApplicationController
   before_action :redirect_if_purchased_or_owner, only: [:new, :create]
 
   def new
-    gon.public_key = 'pk_test_c207b00da96ac02ebb676754'
+    gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
     @purchase_form = PurchaseForm.new
   end
 
   def create
     @purchase_form = PurchaseForm.new(purchase_form_params)
-    Payjp.api_key = 'sk_test_5b28905565479baa2081b240'
+    Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
 
     if @purchase_form.valid?
       begin
@@ -36,6 +36,7 @@ class PurchasesController < ApplicationController
         render :new
       end
     else
+      gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
       @errors = @purchase_form.errors.full_messages
       flash.now[:alert] = '保存に失敗しました'
       render :new
