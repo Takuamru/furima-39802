@@ -4,11 +4,14 @@ class PurchaseForm
   attr_accessor :postal_code, :shipping_area_id, :city, :address, :building_name, :phone_number, :token, :user_id, :item_id
 
   with_options presence: true do
-    validates :postal_code, presence: true, format: { with: /\A\d{3}-\d{4}\z/ }
-    validates :shipping_area_id, presence: true, numericality: { other_than: 0 }
-    validates :city, presence: true
-    validates :address, presence: true
-    validates :phone_number, presence: true, format: { with: /\A\d{10,11}\z/ }
+    validates :postal_code, format: { with: /\A\d{3}-\d{4}\z/ }
+    validates :shipping_area_id, numericality: { other_than: 0 }
+    validates :city
+    validates :address
+    validates :phone_number, format: { with: /\A\d{10,11}\z/ }
+    validates :user_id
+    validates :item_id
+    validates :token
   end
 
   def save
