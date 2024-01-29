@@ -50,6 +50,7 @@ class PurchasesController < ApplicationController
   end
 
   def purchase_form_params
+    #name属性を指定しているのでtokenの記載箇所はpermitで正しい（メンターに質問済み）
     params.require(:purchase_form).permit(:postal_code, :shipping_area_id, :city, :address, :building_name, :phone_number, :token).merge(user_id: current_user.id, item_id: @item.id)
   end
 

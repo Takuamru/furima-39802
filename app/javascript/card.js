@@ -18,7 +18,6 @@ const pay = () => {
     payjp.createToken(numberElement).then(function (response) {
       if (response.error) {
         // エラーハンドリング
-        console.log(response.error.message);
       } else {
         // トークンを取得し、フォームに追加
         const token = response.id;
