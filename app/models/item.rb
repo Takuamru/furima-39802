@@ -9,7 +9,7 @@ class Item < ApplicationRecord
   belongs_to :shipping_area
   belongs_to :shipping_day
   
-  #has_one :purchase
+  has_one :purchase
 
   with_options presence: true do
     validates :image  

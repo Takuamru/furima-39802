@@ -53,6 +53,7 @@ class ItemsController < ApplicationController
   end
 
   def redirect_if_not_owner
-    redirect_to root_path unless current_user.id == @item.user_id
+    # アイテムが売却済み、または現在のユーザーがアイテムの所有者でない場合はトップページにリダイレクト
+    redirect_to root_path if @item.purchase.present? || current_user.id != @item.user_id
   end
 end
