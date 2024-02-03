@@ -1,5 +1,5 @@
 const pay = () => {
-  const publicKey = gon.public_key
+  const publicKey = gon.public_key;
   const payjp = Payjp(publicKey);
   const elements = payjp.elements();
   const numberElement = elements.create('cardNumber');
@@ -14,22 +14,20 @@ const pay = () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // トークンを生成し、フォームに追加
     payjp.createToken(numberElement).then(function (response) {
       if (response.error) {
-        // エラーハンドリング
-      } else {
-        // トークンを取得し、フォームに追加
-        const token = response.id;
-        const tokenObj = `<input value="${token}" name='purchase_form[token]' type="hidden">`;
-        form.insertAdjacentHTML("beforeend", tokenObj);
-
-        // クレジットカードの情報をクリア
+        // エラーハンドリング: HTMLにエラーメッセージを挿入
         numberElement.clear();
         expiryElement.clear();
         cvcElement.clear();
-
-        // フォームを送信
+        form.submit();
+      } else {
+        const token = response.id;
+        const tokenObj = `<input value="${token}" name='purchase_form[token]' type="hidden">`;
+        form.insertAdjacentHTML("beforeend", tokenObj);
+        numberElement.clear();
+        expiryElement.clear();
+        cvcElement.clear();
         form.submit();
       }
     });
@@ -37,5 +35,4 @@ const pay = () => {
 };
 
 window.addEventListener("turbo:load", pay);
-window.addEventListener("turbo:render", pay); // turbo:render イベントを追加
-
+window.addEventListener("turbo:render", pay);
